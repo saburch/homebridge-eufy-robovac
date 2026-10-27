@@ -41,7 +41,7 @@ export interface StatusResponse {
         [StatusDps.CLEAN_SPEED]?: string,
         [StatusDps.FIND_ROBOT]?: boolean,
         [StatusDps.BATTERY_LEVEL]?: number,
-        [StatusDps.ERROR_CODE]?: string,
+        [StatusDps.ERROR_CODE]?: string | number,
     }
 }
 
@@ -57,7 +57,7 @@ export interface RobovacStatus {
         [StatusDps.CLEAN_SPEED]: string,
         [StatusDps.FIND_ROBOT]: boolean,
         [StatusDps.BATTERY_LEVEL]: number,
-        [StatusDps.ERROR_CODE]: string,
+        [StatusDps.ERROR_CODE]: string | number,
     }
 }
 
@@ -103,8 +103,10 @@ export enum WorkStatus {
 }
 
 export enum CleanSpeed {
+    QUIET = 'Quiet',
     STANDARD = 'Standard',
     BOOST_IQ = 'Boost_IQ',
+    TURBO = 'Turbo',
     MAX = 'Max',
     NO_SUCTION = 'No_suction'
 }
@@ -134,8 +136,8 @@ export const errorCodeFriendlyNames = new Map<string, string>([
 ]
 );
 
-export function getErrorCodeFriendlyName(errorCode: string) {
-    return errorCodeFriendlyNames.get(errorCode) ?? errorCode;
+export function getErrorCodeFriendlyName(errorCode: string | number) {
+    return errorCodeFriendlyNames.get(String(errorCode)) ?? String(errorCode);
 }
 
 export class RoboVac {
@@ -146,6 +148,7 @@ export class RoboVac {
     lastStatusValid: boolean;
     cachingDuration: number;
     ongoingStatusUpdate: Promise<RobovacStatus> | null;
+    private setQueue: Promise<void> = Promise.resolve();
     log: Logger;
     consoleDebugLog: boolean;
 
@@ -310,22 +313,29 @@ export class RoboVac {
     }
 
     async set(dps: StatusDps, newValue: any) {
-        this.log.debug("Setting", statusDpsFriendlyNames.get(dps), "to", newValue, "...");
-        try {
-            if (!this.api.isConnected()) {
-                await this.connect();
-            }
-
-            await this.api.set({ dps: parseInt(dps), set: newValue });
-            this.log.info("Setting", statusDpsFriendlyNames.get(dps), "to", newValue, "successful.");
-        } catch (e) {
-            this.log.error("An error occurred! (during SET of", statusDpsFriendlyNames.get(dps), "to", newValue, "): ", e);
+        const executeSet = async () => {
+            this.log.debug("Setting", statusDpsFriendlyNames.get(dps), "to", newValue, "...");
             try {
-                this.disconnect()
-            } catch (e2) {
+                if (!this.api.isConnected()) {
+                    await this.connect();
+                }
+
+                await this.api.set({ dps: parseInt(dps), set: newValue, shouldWaitForResponse: false });
+                await new Promise((resolve) => setTimeout(resolve, 150));
+                this.log.info("Setting", statusDpsFriendlyNames.get(dps), "to", newValue, "successful.");
+            } catch (e) {
+                this.log.error("An error occurred! (during SET of", statusDpsFriendlyNames.get(dps), "to", newValue, "): ", e);
+                try {
+                    this.disconnect()
+                } catch (e2) {
+                }
+                throw e;
             }
-            throw e;
-        }
+        };
+
+        const next = this.setQueue.then(executeSet, executeSet);
+        this.setQueue = next.then(() => undefined, () => undefined);
+        return next;
     }
 
     async getRunning(): Promise<boolean> {
@@ -405,7 +415,7 @@ export class RoboVac {
         return this.lastStatusValid ? this.lastStatus.dps[StatusDps.BATTERY_LEVEL] : null;
     }
 
-    getErrorCodeCached(): string | null {
+    getErrorCodeCached(): string | number | null {
         return this.lastStatusValid ? this.lastStatus.dps[StatusDps.ERROR_CODE] : null;
     }
 

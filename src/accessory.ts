@@ -1,7 +1,7 @@
 import { Service, PlatformAccessory, CharacteristicValue } from 'homebridge';
 
 import { EufyRobovacPlatform } from './platform';
-import { ErrorCode, RoboVac, StatusDps, StatusResponse, WorkStatus, getErrorCodeFriendlyName, statusDpsFriendlyNames } from './robovac-api';
+import { ErrorCode, RoboVac, StatusDps, StatusResponse, WorkMode, WorkStatus, getErrorCodeFriendlyName, statusDpsFriendlyNames } from './robovac-api';
 import { Logger } from './consoleLogger';
 
 export class EufyRobovacAccessory {
@@ -185,7 +185,7 @@ export class EufyRobovacAccessory {
           setTimeout(() => reject(new Error("Request timed out")), this.callbackTimeout);
         })
       ]);
-      return error_code !== ErrorCode.NO_ERROR;
+      return error_code !== ErrorCode.NO_ERROR && String(error_code) !== '0';
     } catch {
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
@@ -206,7 +206,7 @@ export class EufyRobovacAccessory {
 
     try {
       return await Promise.race([
-        (state) ? this.roboVac.setPlayPause(true) : this.roboVac.setGoHome(true),
+        (state) ? this.roboVac.setWorkMode(WorkMode.AUTO) : this.roboVac.setGoHome(true),
         new Promise<void>((resolve, reject) => {
           setTimeout(() => reject(new Error("Request timed out")), this.callbackTimeout);
         })
@@ -265,7 +265,7 @@ export class EufyRobovacAccessory {
       }
     }
     if (this.errorSensorService && statusResponse.dps[StatusDps.ERROR_CODE] !== undefined) {
-      const is_error = (statusResponse.dps[StatusDps.ERROR_CODE] !== ErrorCode.NO_ERROR);
+      const is_error = (statusResponse.dps[StatusDps.ERROR_CODE] !== ErrorCode.NO_ERROR && String(statusResponse.dps[StatusDps.ERROR_CODE]) !== '0');
       this.log.debug(`updating Error Sensor status for ${this.name} to ${is_error}`);
       this.errorSensorService.updateCharacteristic(this.platform.Characteristic.MotionDetected, is_error);
       if (is_error) this.log.info(`${this.name} reported a device error: ${getErrorCodeFriendlyName(statusResponse.dps[StatusDps.ERROR_CODE])}`);

@@ -11,13 +11,16 @@ A full rewrite of [apexad/homebridge-eufy-robovac](https://github.com/apexad/hom
 
 ### Features
 
-* Switch on / off. When switching off, the RoboVac will return to charging dock first.
-
-* Display battery level, and notify on low battery.
-
-* Display battery charging state.
-
-* Find robot
+* **Native Robotic Vacuum Cleaner (Homebridge 2.0+ with Matter enabled)**:
+  * Appears in the Apple Home app (iOS 18.4+ / macOS 15.4+) as a real **Robotic Vacuum Cleaner** instead of a fake Fan or Switch.
+  * **Run Mode (`rvcRunMode`)**: Start cleaning (`Cleaning`) or stop and return to dock (`Idle`).
+  * **Suction / Clean Mode (`rvcCleanMode`)**: Switch suction speeds between `Quiet`, `Auto` (`Standard`, default), and `Max`.
+  * **Operational State (`rvcOperationalState`)**: Pause, Resume, and Send to Dock (`GoHome`), plus real-time status (`Running`, `Paused`, `SeekingCharger`, `Charging`, `Docked`, `Error`) and structured fault reporting (stuck, wheel jammed, brush jammed, sensor dirty, low battery).
+  * **Battery Monitor (`powerSource`)**: Real-time battery percentage, low/critical battery warnings, and charging state (`IsCharging`, `IsAtFullCharge`, `IsNotCharging`).
+  * **Identify (`identify`)**: Triggers Eufy's "Find Robot" audible beep.
+* **Legacy HAP Fallback (Homebridge 1.x or when Matter is disabled)**:
+  * Switch on / off (as a Fan or Switch). When switching off, the RoboVac will return to the charging dock.
+  * Display battery level, charging state, low battery notifications, Find Robot switch, and Error motion sensor.
 
 ### Supported Devices
 Some newer RoboVac models, such as the Eufy Clean L60, are currently not supported as some messages are encrypted (see [#6](https://github.com/hov3rcraft/homebridge-eufy-robovac/issues/6)).

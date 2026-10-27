@@ -36,25 +36,29 @@
               "required": false
             },
             "useSwitchService": {
-              "title": "Use Switch for Vacuum (Default is Fan)",
+              "title": "Use Switch for Vacuum (Legacy HAP Fallback Only)",
+              "description": "Only applies when Homebridge Matter is disabled. When Matter is enabled (Homebridge 2.0+), the vacuum is automatically exposed as a native Matter Robotic Vacuum Cleaner.",
               "type": "boolean",
               "required": false,
               "default": false
             },
             "findButtonEnabled": {
-              "title": "Enable Find Button",
+              "title": "Enable Find Button (Legacy HAP Fallback Only)",
+              "description": "Only applies when Homebridge Matter is disabled. In Matter mode, use the native Identify action.",
               "type": "boolean",
               "required": false,
               "default": true
             },
             "batteryInformationEnabled": {
-              "title": "Enable Battery and Charging Information",
+              "title": "Enable Battery and Charging Information (Legacy HAP Fallback Only)",
+              "description": "Only applies when Homebridge Matter is disabled. In Matter mode, the PowerSource battery cluster is always enabled.",
               "type": "boolean",
               "required": false,
               "default": true
             },
             "errorSensorEnabled": {
-              "title": "Enable Error Sensor",
+              "title": "Enable Error Sensor (Legacy HAP Fallback Only)",
+              "description": "Only applies when Homebridge Matter is disabled. In Matter mode, operational errors are natively reported via RvcOperationalState.",
               "type": "boolean",
               "required": false,
               "default": true
