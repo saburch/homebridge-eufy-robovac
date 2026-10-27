@@ -34,7 +34,7 @@ In the README of that project it says they are not sure if it still works, but I
 This easiest way to use this plugin is to use [homebridge-config-ui-x](https://www.npmjs.com/package/homebridge-config-ui-x).  
 To configure manually, add to the `platform` section of homebridge's `config.json` after installing the plugin.
 
-**Command:** ```npm install -g @hov3rcraft/homebridge-eufy-robovac```
+**Command:** ```npm install -g @saburch/homebridge-eufy-robovac```
 
 **Config:**
   ```json
@@ -70,6 +70,7 @@ You can add multiple RoboVacs under `devices`.
 
 ### Thank You
 
+* [hov3rcraft](https://github.com/hov3rcraft) - Dynamic platform rewrite of the plugin
 * [mitchellrj](https://github.com/mitchellrj) - Did most of the legwork in figuring out how to talk to the Eufy
 * [apexad](https://github.com/apexad) - Created the [original version](https://github.com/apexad/homebridge-eufy-robovac) of the plugin.
 

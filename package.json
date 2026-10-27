@@ -1,15 +1,20 @@
 {
   "displayName": "Homebridge Eufy Robovac",
-  "name": "@hov3rcraft/homebridge-eufy-robovac",
+  "name": "@saburch/homebridge-eufy-robovac",
   "version": "3.2.2",
   "description": "Homebridge support for Eufy RoboVac",
+  "author": "hov3rcraft",
+  "contributors": [
+    "hov3rcraft",
+    "saburch"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hov3rcraft/homebridge-eufy-robovac.git"
+    "url": "git+https://github.com/saburch/homebridge-eufy-robovac.git"
   },
   "bugs": {
-    "url": "https://github.com/hov3rcraft/homebridge-eufy-robovac/issues"
+    "url": "https://github.com/saburch/homebridge-eufy-robovac/issues"
   },
   "engines": {
     "node": "^20.15.1 || ^22.10.0 || ^24.0.0 || ^26.0.0",

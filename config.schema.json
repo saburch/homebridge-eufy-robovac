@@ -7,7 +7,7 @@
     "type": "object",
     "properties": {
       "devices": {
-        "description": "For information on how to obtain deviceId and localKey, go [here](https://github.com/hov3rcraft/eufy-robovac#readme).",
+        "description": "For information on how to obtain deviceId and localKey, go [here](https://github.com/saburch/homebridge-eufy-robovac#readme).",
         "title": "Devices",
         "type": "array",
         "items": {

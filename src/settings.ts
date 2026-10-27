@@ -6,4 +6,4 @@ export const PLATFORM_NAME = 'EufyRobovac';
 /**
  * This must match the name of your plugin as defined the package.json
  */
-export const PLUGIN_NAME = '@hov3rcraft/homebridge-eufy-robovac';
+export const PLUGIN_NAME = '@saburch/homebridge-eufy-robovac';
